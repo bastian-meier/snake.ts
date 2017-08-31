@@ -6,10 +6,11 @@ var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
 var ghPages = require('gulp-gh-pages');
 var paths = {
-	pages: ['src/*.html']
+	pages: ['src/*.html'],
+	images: ['*.png']
 };
 
-gulp.task('deploy', function() {
+gulp.task('deploy', ['default'], function() {
 	return gulp.src('./dist/**/*')
 		.pipe(ghPages({force: true}));
 });
@@ -19,7 +20,13 @@ gulp.task('copyHtml', function () {
 		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['copyHtml'], function () {
+gulp.task('copyImage', function () {
+	return gulp.src(paths.images)
+		.pipe(gulp.dest('dist'));
+});
+
+
+gulp.task('default', ['copyHtml', 'copyImage'], function () {
 	return browserify({
 		basedir: '.',
 		debug: true,
